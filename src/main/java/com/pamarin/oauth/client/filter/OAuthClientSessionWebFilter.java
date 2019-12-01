@@ -186,13 +186,13 @@ public class OAuthClientSessionWebFilter implements WebFilter {
             final String errorStatus,
             final MultiValueMap<String, String> queryParams
     ) {
-        final String timestamp = queryParams.getFirst("error_timestamp");
+        final String timestamp = queryParams.getFirst("error_at");
         return Mono.error(new ErrorResponseException(
                 ErrorResponse.builder()
                         .error(error)
                         .errorStatus(!hasText(errorStatus) ? 500 : Integer.parseInt(errorStatus))
                         .errorDescription(queryParams.getFirst("error_description"))
-                        .errorTimestamp(!hasText(timestamp) ? 0 : Long.parseLong(timestamp))
+                        .errorAt(!hasText(timestamp) ? 0 : Long.parseLong(timestamp))
                         .errorUri(queryParams.getFirst("error_uri"))
                         .errorCode(queryParams.getFirst("error_code"))
                         .errorOn(queryParams.getFirst("error_on"))
