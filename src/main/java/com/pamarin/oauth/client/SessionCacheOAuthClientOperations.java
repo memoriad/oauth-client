@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Pamarin
+ * Copyright 2017-Current Pamarin.com
  */
 package com.pamarin.oauth.client;
 
