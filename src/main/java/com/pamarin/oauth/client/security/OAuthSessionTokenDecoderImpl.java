@@ -47,8 +47,8 @@ public class OAuthSessionTokenDecoderImpl implements OAuthSessionTokenDecoder {
 
     private Mono<OAuthSession> convert(final String sessionToken, final String json) {
         try {
-            JsonNode node = objectMapper.readTree(json);
-
+            final JsonNode node = objectMapper.readTree(json);
+            final JsonNode nameNode = node.get("user_name");
             return Mono.just(
                     OAuthSession.builder()
                             .sessionToken(sessionToken)
@@ -58,7 +58,7 @@ public class OAuthSessionTokenDecoderImpl implements OAuthSessionTokenDecoder {
                             .user(
                                     OAuthSession.User.builder()
                                             .id(node.get("user_id").asText())
-                                            .name(node.get("user_name").asText())
+                                            .name(nameNode == null ? null : nameNode.asText())
                                             .authorities(node.findValuesAsText("user_authorities"))
                                             .build()
                             )
