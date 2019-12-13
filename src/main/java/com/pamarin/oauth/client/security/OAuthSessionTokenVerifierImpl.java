@@ -73,6 +73,7 @@ public class OAuthSessionTokenVerifierImpl implements OAuthSessionTokenVerifier 
                         OAuthSession.User.builder()
                                 .id(payload.getClaim("user_id").asString())
                                 .name(payload.getClaim("user_name").asString())
+                                .username(payload.getClaim("user_username").asString())
                                 .authorities(Arrays.asList(payload.getClaim("user_authorities").asArray(String.class)))
                                 .build()
                 )

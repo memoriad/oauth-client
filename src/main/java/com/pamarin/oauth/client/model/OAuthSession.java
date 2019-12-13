@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import com.pamarin.oauth.client.constant.OAuthClientConstant;
 
 /**
  *
@@ -48,8 +47,6 @@ public class OAuthSession implements Serializable {
 
     private Client client;
 
-    private Language language;
-
     public User getUser() {
         if (user == null) {
             user = new User();
@@ -62,13 +59,6 @@ public class OAuthSession implements Serializable {
             client = new Client();
         }
         return client;
-    }
-
-    public Language getLanguage() {
-        if (language == null) {
-            language = new Language();
-        }
-        return language;
     }
 
     @Getter
@@ -84,15 +74,7 @@ public class OAuthSession implements Serializable {
 
         private String id;
 
-        private String email;
-
-        private String titleName;
-
-        private String firstName;
-
-        private String middleName;
-
-        private String lastName;
+        private String username;
 
         private String name;
 
@@ -128,37 +110,6 @@ public class OAuthSession implements Serializable {
                 scopes = new ArrayList<>();
             }
             return scopes;
-        }
-
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @ToString
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode(of = "id")
-    public static class Language implements Serializable {
-
-        private static final long serialVersionUID = 1L;
-
-        private Long id;
-
-        private String code;
-
-        private String name;
-
-        public Long getId() {
-            return OAuthClientConstant.DEFAULT_LANGUAGE_ID;
-        }
-
-        public String getCode() {
-            return OAuthClientConstant.DEFAULT_LANGUAGE_CODE;
-        }
-
-        public String getName() {
-            return OAuthClientConstant.DEFAULT_LANGUAGE_NAME;
         }
 
     }
