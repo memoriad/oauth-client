@@ -92,7 +92,9 @@ public class OAuthClientOperationsImpl implements OAuthClientOperations {
     }
 
     private String authenServerUrl(final String path) {
-        return clientProperties.getAuthorizationServer().getInternalUrl() + path;
+        final String url = clientProperties.getAuthorizationServer().getInternalUrl() + path;
+        log.debug("oauth url => {}", url);
+        return url;
     }
 
     private BodyInserter buildCodeBody(final String authorizationCode) {

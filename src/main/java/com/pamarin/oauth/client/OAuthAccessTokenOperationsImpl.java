@@ -3,6 +3,7 @@
  */
 package com.pamarin.oauth.client;
 
+import com.pamarin.core.commons.autoconfigure.CoreCommonsProperties;
 import com.pamarin.oauth.client.exception.OAuthAuthenticationException;
 import com.pamarin.oauth.client.exception.OAuthAuthorizationException;
 import com.pamarin.oauth.client.model.OAuthAccessToken;
@@ -28,10 +29,16 @@ public class OAuthAccessTokenOperationsImpl implements OAuthAccessTokenOperation
     private static final String ERROR_MESSAGE = "please authorize";
 
     private final OAuthClientOperations clientOperations;
+    
+    private final CoreCommonsProperties commonsProperties;
 
     @Autowired
-    public OAuthAccessTokenOperationsImpl(OAuthClientOperations clientOperations) {
+    public OAuthAccessTokenOperationsImpl(
+            final OAuthClientOperations clientOperations,
+            final CoreCommonsProperties commonsProperties
+    ) {
         this.clientOperations = clientOperations;
+        this.commonsProperties = commonsProperties;
     }
 
     @Override
@@ -77,7 +84,7 @@ public class OAuthAccessTokenOperationsImpl implements OAuthAccessTokenOperation
         return ResponseCookie.from(cookieName, cookieValue)
                 .path("/")
                 .httpOnly(true)
-                .secure("https".equalsIgnoreCase(exchange.getRequest().getURI().getScheme()))
+                .secure(commonsProperties.getApplication().getUrl().startsWith("https"))
                 .sameSite("Lax")
                 .maxAge(maxAge)
                 .build();
