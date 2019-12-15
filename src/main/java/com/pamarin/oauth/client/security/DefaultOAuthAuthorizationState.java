@@ -93,7 +93,6 @@ public class DefaultOAuthAuthorizationState implements OAuthAuthorizationState {
                 .path("/")
                 .httpOnly(true)
                 .maxAge(maxAge)
-                .domain(state)
                 .secure(applicationUrl.startsWith("https"))
                 .build();
     }
