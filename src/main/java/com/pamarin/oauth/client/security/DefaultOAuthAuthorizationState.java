@@ -3,12 +3,14 @@
  */
 package com.pamarin.oauth.client.security;
 
+import com.pamarin.core.commons.autoconfigure.CoreCommonsProperties;
 import com.pamarin.core.commons.resolver.HttpCookieResolver;
 import com.pamarin.core.commons.resolver.impl.DefaultHttpCookieResolver;
 import com.pamarin.core.commons.util.Base64Utils;
 import com.pamarin.oauth.client.exception.OAuthInvalidAuthorizationStateException;
 import java.security.SecureRandom;
 import java.util.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -31,9 +33,13 @@ public class DefaultOAuthAuthorizationState implements OAuthAuthorizationState {
     private final SecureRandom secureRandom;
 
     private final HttpCookieResolver cookieResolver;
+    
+    private final CoreCommonsProperties commonsProperties;
 
-    public DefaultOAuthAuthorizationState() {
+    @Autowired
+    public DefaultOAuthAuthorizationState(final CoreCommonsProperties commonsProperties) {
         this.secureRandom = new SecureRandom();
+        this.commonsProperties = commonsProperties;
         this.cookieResolver = new DefaultHttpCookieResolver(COOKIE_NAME);
     }
 
@@ -82,11 +88,13 @@ public class DefaultOAuthAuthorizationState implements OAuthAuthorizationState {
     }
 
     private ResponseCookie buildCookie(final String state, final int maxAge, final ServerWebExchange exchange) {
+        final String applicationUrl = commonsProperties.getApplication().getUrl();
         return ResponseCookie.from(COOKIE_NAME, state)
                 .path("/")
                 .httpOnly(true)
                 .maxAge(maxAge)
-                .secure("https".equalsIgnoreCase(exchange.getRequest().getURI().getScheme()))
+                .domain(state)
+                .secure(applicationUrl.startsWith("https"))
                 .build();
     }
 }

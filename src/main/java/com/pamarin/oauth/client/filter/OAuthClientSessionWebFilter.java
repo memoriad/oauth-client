@@ -313,7 +313,12 @@ public class OAuthClientSessionWebFilter implements WebFilter {
             final String continueUri = buildContinueUri(exchange);
             final String encypted = base64AESEncryption.encrypt(continueUri, clientProperties.getSecret());
             final int maxAgeSeconds = 60 * 60;//1 hr
-            saveContinueUriCookie(encypted, maxAgeSeconds, exchange);
+            saveContinueUriCookie(
+                    encypted, 
+                    maxAgeSeconds, 
+                    commonsProperties.getApplication().getUrl().startsWith("https"),
+                    exchange
+            );
         } catch (Exception e) {
             log.warn("saveContinueUrl error => {}", e.getMessage());
         }
@@ -333,18 +338,28 @@ public class OAuthClientSessionWebFilter implements WebFilter {
         } catch (Exception e) {
             return null;
         } finally {
-            saveContinueUriCookie("", 1, exchange);
+            saveContinueUriCookie(
+                    "", 
+                    1, 
+                    commonsProperties.getApplication().getUrl().startsWith("https"),
+                    exchange
+            );
         }
     }
 
-    private static void saveContinueUriCookie(final String cookieValue, final int maxAge, final ServerWebExchange exchange) {
+    private static void saveContinueUriCookie(
+            final String cookieValue, 
+            final int maxAge, 
+            final boolean secure,
+            final ServerWebExchange exchange
+    ) {
         final ServerHttpResponse httpResp = exchange.getResponse();
         httpResp.beforeCommit(() -> Mono.fromRunnable(() -> {
             httpResp.addCookie(
                     ResponseCookie.from(CONTINUE_URI_COOKIE, cookieValue)
                             .path("/")
                             .httpOnly(true)
-                            .secure("https".equalsIgnoreCase(exchange.getRequest().getURI().getScheme()))
+                            .secure(secure)
                             .sameSite("Lax")
                             .maxAge(maxAge)
                             .build()
