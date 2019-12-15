@@ -8,12 +8,8 @@ import com.pamarin.core.commons.resolver.HttpCookieResolver;
 import com.pamarin.core.commons.resolver.impl.DefaultHttpCookieResolver;
 import com.pamarin.core.commons.util.Base64Utils;
 import com.pamarin.oauth.client.exception.OAuthInvalidAuthorizationStateException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -97,22 +93,7 @@ public class DefaultOAuthAuthorizationState implements OAuthAuthorizationState {
                 .path("/")
                 .httpOnly(true)
                 .maxAge(maxAge)
-                .domain(getDomainName(applicationUrl))
                 .secure(applicationUrl.startsWith("https"))
                 .build();
-    }
-
-    public static String getDomainName(String url) {
-        try {
-            URI uri = new URI(url);
-            String domain = uri.getHost();
-            String[] arr = domain.split("\\.");
-            if (arr.length == 2) {
-                return "www." + domain;
-            }
-            return domain;
-        } catch (URISyntaxException ex) {
-            return null;
-        }
     }
 }
