@@ -67,6 +67,7 @@ public class OAuthSessionTokenDecoderImpl implements OAuthSessionTokenDecoder {
         try {
             final JsonNode node = objectMapper.readTree(json);
             final JsonNode nameNode = node.get("user_name");
+            final JsonNode photoUrlNode = node.get("user_photo_url");
             final JsonNode usernameNode = node.get("user_username");
             final JsonNode lastAccessedAtNode = node.get("lastAccessedAt");
             final JsonNode loggedinAtNode = node.get("loggedinAt");
@@ -84,6 +85,7 @@ public class OAuthSessionTokenDecoderImpl implements OAuthSessionTokenDecoder {
                                     OAuthSession.User.builder()
                                             .id(node.get("user_id").asText())
                                             .name(nameNode == null ? null : nameNode.asText())
+                                            .photoUrl(photoUrlNode == null ? null : photoUrlNode.asText())
                                             .username(usernameNode == null ? null : usernameNode.asText())
                                             .authorities(convertToList(node.get("user_authorities")))
                                             .build()

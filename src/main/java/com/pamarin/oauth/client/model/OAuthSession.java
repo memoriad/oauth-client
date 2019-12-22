@@ -77,6 +77,8 @@ public class OAuthSession implements Serializable {
         private String username;
 
         private String name;
+        
+        private String photoUrl;
 
         private List<String> authorities;
 

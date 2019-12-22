@@ -61,6 +61,7 @@ public class OAuthSessionTokenVerifierImpl implements OAuthSessionTokenVerifier 
         final Long lastAccessedAt = payload.getClaim("lastAccessedAt").asLong();
         final Long loggedinAt = payload.getClaim("loggedinAt").asLong();
         final Long confirmPasswordAt = payload.getClaim("confirmPasswordAt").asLong();
+        
         return OAuthSession.builder()
                 .sessionToken(sessionToken)
                 .id(payload.getClaim("id").asString())
@@ -73,6 +74,7 @@ public class OAuthSessionTokenVerifierImpl implements OAuthSessionTokenVerifier 
                         OAuthSession.User.builder()
                                 .id(payload.getClaim("user_id").asString())
                                 .name(payload.getClaim("user_name").asString())
+                                .photoUrl(payload.getClaim("user_photo_url").asString())
                                 .username(payload.getClaim("user_username").asString())
                                 .authorities(Arrays.asList(payload.getClaim("user_authorities").asArray(String.class)))
                                 .build()
