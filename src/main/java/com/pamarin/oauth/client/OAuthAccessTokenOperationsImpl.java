@@ -7,8 +7,10 @@ import com.pamarin.core.commons.autoconfigure.CoreCommonsProperties;
 import com.pamarin.oauth.client.exception.OAuthAuthenticationException;
 import com.pamarin.oauth.client.exception.OAuthAuthorizationException;
 import com.pamarin.oauth.client.model.OAuthAccessToken;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import static org.springframework.util.StringUtils.hasText;
@@ -63,6 +65,11 @@ public class OAuthAccessTokenOperationsImpl implements OAuthAccessTokenOperation
 
     private void storeToken(final OAuthAccessToken accessToken, final ServerWebExchange exchange) {
         final ServerHttpResponse httpResp = exchange.getResponse();
+        
+        final Map<String, Object> attributes = exchange.getAttributes();
+        attributes.put("access_token", accessToken.getAccessToken());
+        attributes.put("refresh_token", accessToken.getRefreshToken());
+        
         httpResp.beforeCommit(() -> Mono.fromRunnable(() -> {
             httpResp.addCookie(buildCookie(
                     "access_token",

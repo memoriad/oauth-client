@@ -194,7 +194,7 @@ public class OAuthClientSessionWebFilter implements WebFilter {
                         .errorDescription(queryParams.getFirst("error_description"))
                         .errorAt(!hasText(errorAt) ? 0 : Long.parseLong(errorAt))
                         .errorUri(queryParams.getFirst("error_uri"))
-                        .errorCode(queryParams.getFirst("error_code"))
+                        .errorTraceId(queryParams.getFirst("error_trace_id"))
                         .errorOn(queryParams.getFirst("error_on"))
                         .state(queryParams.getFirst("state"))
                         .build()
